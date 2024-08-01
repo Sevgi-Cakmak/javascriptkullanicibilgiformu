@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kullanici Bilgi Formu</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+            background-color: rgb(255, 255, 255);
+           }
+
+        #başlik{
+            text-align: center;
+            background-color: rgb(229, 232, 235);
+            color: black;
+            width: 100%;
+            height: 20%;
+            font-style: oblique;
+        }
+
+        #userForm{
+            background-color: rgb(136, 144, 185);
+            color: black;
+            border: 2px inset lightgrey;
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        .question{
+            color: black;
+            font-size: larger;
+            padding-left: 20px;
+        }
+        
+        #başlik1{
+        text-align: center;
+        background-color: rgb(255, 255, 255);
+        color: black;
+        width: 100%;
+        height: 20%;
+        font-style: oblique;
+      }
+
+
+        #userTable {
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+
+        #editForm {
+            border-style: double;
+            background-color: rgb(229, 232, 235);
+            color: black;
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            display: none; /* Başlangıçta gizli */
+        }
+ 
+
+    </style>
+</head>
+
+<body>
+
+
+    <form id="userForm">
+
+        <div><h1 id="başlik">Kullanici Bilgi Formu</h1></div>
+        <table>
+            <tr>
+                <th><label style="color: black;font-size: larger;padding-left: 190px;" for="firstName">Ad:</label></th>
+                <th><input type="text" id="firstName" required></th>
+            </tr>
+                
+            <tr>
+                <th><label style="color: black;font-size: larger;padding-left: 170px;"  for="lastName">Soyad:</label></th>
+                <th><input type="text" id="lastName" required></th>
+            </tr>
+
+            <tr>
+                <th><label class="question" for="phone">Cep Telefonu (10 haneli):</label></th>
+                <th> <input type="tel" id="phone" pattern="[0-9]{10}" required></th>
+            </tr>
+
+        </table>
+ 
+
+
+        
+        <button style="border-radius: 20px;width: 200px;background-color: rgb(229, 232, 235);margin-left: 40%;" type="button" onclick="addUserInfo()">Kaydet</button>
+
+    </form> 
+
+
+    <div style="background-color: rgb(136, 144, 185);color: black;border: 2px inset lightgrey;
+    width: 100%;height: 200px;object-fit: contain;margin-top: 50px;">
+       
+
+        <table   id="userTable" border="1">
+            <tr>
+                <th  style="padding: 10px;" colspan="4">Kayitli kullanicilar</th>
+            </tr>
+            <tr>
+                <th  style="padding: 5px;"colspan="1">Ad</th>
+                <th style="padding: 5px;" colspan="1">Soyad</th>
+                <th style="padding: 5px;">Cep Telefonu</th>
+                <th style="padding: 5px;">işlem</th>
+            </tr>
+        </table>
+    </div>
+
+    
+    <div  id="editForm" style="display: none;">
+
+        <div><h1 id="başlik1">Kullanici Bilgilerini Güncelle</h1></div>
+
+
+    <table>
+
+        <tr>
+            <th><label style="color: black;font-size: larger;padding-left: 190px;"  class="question" for="editFirstName">Ad:</label></th>
+            <th><input type="text" id="editFirstName" required></th>
+        </tr>
+        
+        <tr>
+            <th><label  style="color: black;font-size: larger;padding-left: 170px;" class="question" for="editLastName">Soyad:</label></th>
+            <th><input type="text" id="editLastName" required></th>
+        </tr>
+
+        <tr>
+            <th><label  class="question" for="editPhone">Cep Telefonu (10 haneli):</label></th>
+            <th><input type="tel" id="editPhone" pattern="[0-9]{10}" required></th>
+        </tr>
+
+    </table>
+        
+  
+
+        <button  style="border-radius: 20px;width: 200px;background-color: rgb(255, 255, 255);margin-left: 40%;"  type="button" onclick="updateUserInfo()">Güncelle</button>
+
+    </div>
+
+
+    <script>
+
+
+
+        function addUserInfo() {
+           
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const phone = document.getElementById("phone").value;
+
+
+
+            if (isPhoneNumberUnique(phone)) {
+                const table = document.getElementById("userTable");
+                const newRow = table.insertRow(-1);
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+                const cell4 = newRow.insertCell(3);
+
+
+                cell1.innerHTML = firstName;
+                cell2.innerHTML = lastName;
+                cell3.innerHTML = phone;
+                cell4.innerHTML = 
+                '<button style="border-radius: 20px;width: 90px;background-color: rgb(229, 232, 235);" onclick="deleteRow(this)">Sil</button><button style="border-radius: 20px;width: 90px;background-color: rgb(229, 232, 235);"onclick="showEditForm(this)">Güncelle</button>';
+ 
+                
+
+                document.getElementById("userForm").reset();
+                table.style.display = "table";
+            } else {
+                alert("Bu telefon numarasi zaten kayitli!");
+            }
+        }
+
+
+
+        function isPhoneNumberUnique(phone) {
+            const table = document.getElementById("userTable");
+            const rows = table.getElementsByTagName("tr");
+            for (let i = 1; i < rows.length; i++) {
+                const phoneNumberInTable = rows[i].cells[2].innerHTML;
+                if (phone === phoneNumberInTable) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+
+
+        function deleteRow(button) {
+            const row = button.parentNode.parentNode;
+            const phoneNumberToDelete = row.cells[2].innerHTML;
+
+            if (confirm("Bu kaydi silmek istediğinize emin misiniz?")) {
+                row.parentNode.removeChild(row);
+                alert("Kayit başariyla silindi.");
+            }
+        }
+
+
+        window.onload = function () {
+        
+        const table = document.getElementById("userTable");
+        table.style.display = "none";
+        }  
+
+
+
+        // --- Güncelleme İşlemleri ---
+
+       
+        function showEditForm(button) {
+            const row = button.parentNode.parentNode;
+            const firstName = row.cells[0].innerHTML;
+            const lastName = row.cells[1].innerHTML;
+            const phone = row.cells[2].innerHTML;
+
+
+            document.getElementById("editFirstName").value = firstName;
+            document.getElementById("editLastName").value = lastName;
+            document.getElementById("editPhone").value = phone;
+            document.getElementById("editForm").dataset.rowIndex = row.rowIndex;
+
+
+            document.getElementById("editForm").style.display = "block";
+        }
+
+
+
+
+        function updateUserInfo() {
+            const editFirstName = document.getElementById("editFirstName").value;
+            const editLastName = document.getElementById("editLastName").value;
+            const editPhone = document.getElementById("editPhone").value;
+
+                const table = document.getElementById("userTable");
+                const rowIndex = document.getElementById("editForm").dataset.rowIndex;
+                const row = table.rows[rowIndex];
+
+
+                row.cells[0].innerHTML = editFirstName;
+                row.cells[1].innerHTML = editLastName;
+                row.cells[2].innerHTML = editPhone;
+                hideEditForm();
+         
+        }
+
+
+    
+
+        function hideEditForm() {
+            document.getElementById("editForm").style.display = "none";
+        }
+
+
+
+ 
+
+    </script>
+</body>
+
+</html>
